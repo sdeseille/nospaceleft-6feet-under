@@ -1,4 +1,4 @@
-let { init, Sprite, GameLoop } = kontra
+let { init, Sprite, GameLoop, initKeys, keyPressed } = kontra
 
 let { canvas } = init();
 
