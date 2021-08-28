@@ -30,7 +30,7 @@ for (let i = 0; i < 3; i++) {
     initialXpos = 0
   }
   createEnemy(initialXpos,initialYpos,direction);
-  initialYpos+=70
+  initialYpos+=60
   direction*=-1
 }
 
@@ -73,7 +73,7 @@ let floor_three = Sprite({
   type: 'ground',
   name: 'platform-3',
   x: 0,
-  y: 165,
+  y: 155,
   render() {
     this.context.fillStyle = 'olive';
     this.context.fillRect(0, 0 , canvas.width, 10);
@@ -102,7 +102,10 @@ let loop = GameLoop({  // create the main game loop
     sprites.map(sprite => {
       if (sprite.x > canvas.width) {
         sprite.x = -sprite.width;
-        }
+      }
+      if (sprite.x < 0-sprite.width ){
+        sprite.x = canvas.width
+      }
       sprite.update()
     });
   },
