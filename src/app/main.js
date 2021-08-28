@@ -2,13 +2,42 @@ import kontra from './libs/kontra.min.mjs'
 let { init, Sprite, GameLoop, initKeys, keyPressed, TileEngine } = kontra
 
 let { canvas } = init();
-
+let sprites = [];
 console.log(canvas)
+
+
+function createEnemy(xpos,ypos,direction) {
+  let enemy = kontra.Sprite({
+    type: 'enemy',  // we'll use this for collision detection
+    x: xpos,
+    y: ypos,
+    color: 'red',  // fill color of the sprite rectangle
+    width: 10,     // width and height of the sprite rectangle
+    height: 15,
+    dx: (Math.random() * 4 - 2) * direction, 
+  });
+  sprites.push(enemy);
+}
+
+let initialXpos=0
+let initialYpos=20
+let direction=1
+
+for (let i = 0; i < 3; i++) {
+  if (direction < 1) {
+    initialXpos = canvas.width
+  } else {
+    initialXpos = 0
+  }
+  createEnemy(initialXpos,initialYpos,direction);
+  initialYpos+=70
+  direction*=-1
+}
 
 let sprite = Sprite({
   x: 100,        // starting x,y position of the sprite
   y: 80,
-  color: 'red',  // fill color of the sprite rectangle
+  color: 'blue',  // fill color of the sprite rectangle
   width: 10,     // width and height of the sprite rectangle
   height: 15,
   dx: 1          // move the sprite 2px to the right every frame
@@ -22,10 +51,10 @@ let floor_one = Sprite({
   type: 'ground',
   name: 'platform-1',
   x: 0,
-  y: 20,
+  y: 35,
   render() {
     this.context.fillStyle = 'forestgreen';
-    this.context.fillRect(0, 0 , canvas.width, -10);
+    this.context.fillRect(0, 0 , canvas.width, 10);
   }
 });
 
@@ -44,28 +73,12 @@ let floor_three = Sprite({
   type: 'ground',
   name: 'platform-3',
   x: 0,
-  y: 160,
+  y: 165,
   render() {
     this.context.fillStyle = 'olive';
-    this.context.fillRect(0, 0 , canvas.width, -10);
+    this.context.fillRect(0, 0 , canvas.width, 10);
   }
 });
-
-for (let n = 0; n < deepness; n++){
-  let ground = Sprite({
-    type: 'ground',
-    name: 'platform-'+n,
-    x: 0,
-    y: tunnelPos,
-    render() {
-      this.context.fillStyle = 'forestgreen';
-      this.context.fillRect(0, tunnelPos , canvas.width, -10);
-    }
-  });
-  console.log(ground.name)
-  platforms.push(ground)
-  tunnelPos = tunnelPos + (canvas.height / deepness)
-}
 
 let loop = GameLoop({  // create the main game loop
   update: function() { // update the game state
@@ -86,6 +99,12 @@ let loop = GameLoop({  // create the main game loop
     if (sprite.x > canvas.width) {
     sprite.x = -sprite.width;
     }
+    sprites.map(sprite => {
+      if (sprite.x > canvas.width) {
+        sprite.x = -sprite.width;
+        }
+      sprite.update()
+    });
   },
   render: function() { // render the game state
     // for (let t = 0; t < platforms.length; t++){
@@ -96,6 +115,7 @@ let loop = GameLoop({  // create the main game loop
     floor_two.render();
     floor_three.render();
     sprite.render();
+    sprites.map(sprite => sprite.render());
   }
 });
 
