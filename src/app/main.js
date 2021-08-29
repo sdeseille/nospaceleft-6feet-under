@@ -1,4 +1,4 @@
-import kontra from './libs/kontra.min.mjs'
+import kontra from '../../lib/kontra.min.mjs'
 import {ZZFX, zzfx} from '../../lib/ZzFXMicro.min.js'
 let { init, Sprite, GameLoop, initKeys, keyPressed, TileEngine } = kontra
 
