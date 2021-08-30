@@ -6,6 +6,41 @@ let { canvas } = init();
 let sprites = [];
 console.log(canvas)
 
+function soundJump(){
+  zzfx(...[,,217,.04,.02,.08,1,,8.3,,,,,,,,,.79,.05]);
+}
+
+function soundFall(){
+  zzfx(...[,,949,.01,.07,.19,1,.31,-3.2,,,,,.1,,,,.96,.06]);
+}
+
+function soundHit(){
+  zzfx(...[,,153,,,.06,4,2.81,,.9,,,,.5,,.3,,.93,.06,.15]);
+}
+
+function soundBlip(){
+  zzfx(...[,,95,.01,,.02,1,1.19,,,,,,,27,,,,.01,.95]);
+}
+
+function soundPickUp(){
+  zzfx(...[,,1041,,.04,.18,1,.78,,,,,,,,,,.53,.09]);
+}
+
+function soundExplosion(){
+  zzfx(...[1.08,,284,.01,.09,.2,,1.74,-34,,-358,.03,,.7,,.5,,.92]);
+}
+
+function soundAlert(){
+  zzfx(...[2,0,261.6256,,.32,.5,3,.18,,,,,.4,.4,,,.14,.58,.19,.25]);
+}
+
+function soundHurt(){
+  zzfx(...[1.06,,668,.04,.06,.01,,2.49,10,,,,.05,,,,,.71,.03,.03]);
+}
+
+function soundGameOver(){
+  zzfx(...[,,925,.04,.3,.6,1,.3,,6.27,-184,.09,.17]);
+}
 
 function createEnemy(xpos,ypos,direction) {
   let enemy = kontra.Sprite({
@@ -30,7 +65,7 @@ function definePlayer(xpos,ypos) {
 let initialXpos=0
 let initialYpos=20
 let direction=1
-
+//this.soundGameOver()
 for (let i = 0; i < 3; i++) {
   if (direction < 1) {
     initialXpos = canvas.width
@@ -48,7 +83,10 @@ let sprite = Sprite({
   color: 'blue',  // fill color of the sprite rectangle
   width: 10,     // width and height of the sprite rectangle
   height: 15,
-  dx: 1          // move the sprite 2px to the right every frame
+  dx: 1,          // move the sprite 2px to the right every frame
+  update(){
+    //this.soundBlip()
+  }
 });
 
 
@@ -103,6 +141,7 @@ let floor_three = Sprite({
 });
 
 let loop = GameLoop({  // create the main game loop
+
   update: function() { // update the game state
 
     // for (let t = 0; t < platforms.length; t++){
