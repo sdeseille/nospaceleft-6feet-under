@@ -6,6 +6,87 @@ let { canvas } = init();
 let sprites = [];
 console.log(canvas)
 
+let soundEnable=1;
+
+class Timer 
+{
+    constructor()           { this.endTime=0; }
+    Set(timeLeft=0)         { this.endTime = time + timeLeft; }
+    Get()                   { return this.IsSet()? time - this.endTime : 1e9; }
+    IsSet()                 { return this.endTime > 0; }
+    UnSet()                 { this.endTime = 0; }
+    Elapsed()               { return !this.IsSet() || time > this.endTime; }
+    valueOf()               { return this.Get(); }
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// ZzFXmicro - Zuper Zmall Zound Zynth - MIT License - Copyright 2019 Frank Force
+let zzfx_v=.15;
+let zzfx_x=0;
+
+let beatTimer = new Timer();
+let beatCount = 0;
+let lastNote;
+if (typeof AudioContext === 'undefined') { AudioContext = webkitAudioContext }
+function UpdateAudio() {
+  if (!soundEnable || !zzfx_x || zzfx_x.state != 'running')
+    return
+}
+
+function PlaySound(sound, p=0) {
+  if (!zzfx_x)
+    zzfx_x = new AudioContext;
+  if (!soundEnable || !zzfx_x || zzfx_x.state != 'running') {
+    zzfx_x.resume();
+    return;
+  }
+      
+  switch(sound) {
+    case 0: // shoot
+      zzfx(.7,.05,899,.2,.02,-8,1,0,0); // ZzFX 10453
+      //zzfx(1,.1,5504,.1,.1,-30,.5,.5,.33); // ZzFX 36695
+      break;
+        
+    case 1: // enemy hit
+      zzfx(.7,.05,1821,.05,.05,.1,3,13,.64); // ZzFX 10119
+      break;
+        
+    case 2: // egg hit
+      zzfx(1,.05,110,.2,.99,.5,3.9,.7,.43); // ZzFX 65151
+      break;
+        
+    case 3: // player die
+      zzfx(1.5,.05,111,2,.1,-1,5,0,0); // ZzFX 73670
+      break;
+        
+    case 4: // start
+      zzfx(1,.05,5,1,.1,0,.4,44.1,.88); // ZzFX 31713
+      break;
+        
+    case 5: // cant damage hit
+      zzfx(1,.05,1671,.05,.22,0,0,0,0); // ZzFX 18784
+      break;
+        
+    case 6: // enemy die
+      zzfx(1,.05,1381,.25,.05,4,3.1,1,0); // ZzFX 82807
+      break;
+        
+    case 7: // egg die
+      zzfx(1.2,.05,55,2,.05,-0.3,3,8,0); // ZzFX 62469
+      //zzfx(1.2,.05,105,1,.1,.3,2.8,40.3,0); // ZzFX 45049
+      break;
+        
+    case 8: // enemy shoot
+      zzfx(1,.05,5504,.1,.1,-30,.5,.5,.33); // ZzFX 36695
+      break;
+        
+    case 9: // powerup shoot
+      zzfx(1.2,.05,499,.5,.02,-2,1,1,0); // ZzFX 10453
+      break;
+  }
+}
+
 function soundJump(){
   zzfx(...[,,217,.04,.02,.08,1,,8.3,,,,,,,,,.79,.05]);
 }
@@ -148,7 +229,7 @@ let loop = GameLoop({  // create the main game loop
     //   console.log(platforms[t].y)
     //   platforms[t].update()
     // }
-
+    UpdateAudio();
     floor_one.update();
     floor_two.update();
     floor_three.update();
@@ -168,6 +249,8 @@ let loop = GameLoop({  // create the main game loop
         sprite.x = canvas.width
       }
       sprite.update()
+      //TODO: study the code stolen from following project: https://github.com/KilledByAPixel/EggTimeRewind
+      //PlaySound(8);
     });
   },
   render: function() { // render the game state
