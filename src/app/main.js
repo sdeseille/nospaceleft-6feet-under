@@ -129,8 +129,8 @@ function createEnemy(xpos,ypos,direction) {
     x: xpos,
     y: ypos,
     color: 'red',  // fill color of the sprite rectangle
-    width: 10,     // width and height of the sprite rectangle
-    height: 15,
+    width: 16,     // width and height of the sprite rectangle
+    height: 24,
     dx: (Math.random() * 4 - 2) * direction, 
   });
   sprites.push(enemy);
@@ -154,117 +154,103 @@ for (let i = 0; i < 3; i++) {
     initialXpos = 0
   }
   createEnemy(initialXpos,initialYpos,direction);
-  initialYpos+=60
+  initialYpos+=59
   direction*=-1
 }
 
-let sprite = Sprite({
-  x: 100,        // starting x,y position of the sprite
-  y: 80,
-  color: 'blue',  // fill color of the sprite rectangle
-  width: 10,     // width and height of the sprite rectangle
-  height: 15,
-  dx: 1,          // move the sprite 2px to the right every frame
-  update(){
-    //this.soundBlip()
-  }
-});
+let image = new Image();
+image.src = '../../assets/imgs/hero.png';
+image.onload = function() {
+  let player = Sprite({
+    x: 100,
+    y: 35,
+    dx: 1,
+    anchor: {x: 0, y: 1},
 
+    // required for an image sprite
+    image: image
+  });
 
-
-let player = Sprite({
-  x: 100,        // starting x,y position of the sprite
-  y: 80,
-  color: 'blue',  // fill color of the sprite rectangle
-  width: 24,     // width and height of the sprite rectangle
-  height: 24,
-  dx: 1,         // move the sprite 2px to the right every frame
-  render() {
-    //definePlayer(this.x,this.y)
-  }
-});
-
-let platforms = []
-let deepness = 5
-let tunnelPos = 0
-
-let floor_one = Sprite({
-  type: 'ground',
-  name: 'platform-1',
-  x: 0,
-  y: 35,
-  render() {
-    this.context.fillStyle = 'forestgreen';
-    this.context.fillRect(0, 0 , canvas.width, 10);
-  }
-});
-
-let floor_two = Sprite({
-  type: 'ground',
-  name: 'platform-2',
-  x: 0,
-  y: 95,
-  render() {
-    this.context.fillStyle = 'gray';
-    this.context.fillRect(0, 0 , canvas.width, 10);
-  }
-});
-
-let floor_three = Sprite({
-  type: 'ground',
-  name: 'platform-3',
-  x: 0,
-  y: 155,
-  render() {
-    this.context.fillStyle = 'olive';
-    this.context.fillRect(0, 0 , canvas.width, 10);
-  }
-});
-
-let loop = GameLoop({  // create the main game loop
-
-  update: function() { // update the game state
-
-    // for (let t = 0; t < platforms.length; t++){
-    //   console.log(platforms[t].y)
-    //   platforms[t].update()
-    // }
-    UpdateAudio();
-    floor_one.update();
-    floor_two.update();
-    floor_three.update();
-    player.update();
-    sprite.update();
-
-    // wrap the sprites position when it reaches
-    // the edge of the screen
-    if (sprite.x > canvas.width) {
-    sprite.x = -sprite.width;
+  let platforms = []
+  let deepness = 5
+  let tunnelPos = 0
+  
+  let floor_one = Sprite({
+    type: 'ground',
+    name: 'platform-1',
+    x: 0,
+    y: 35,
+    render() {
+      this.context.fillStyle = 'forestgreen';
+      this.context.fillRect(0, 0 , canvas.width, 10);
     }
-    sprites.map(sprite => {
-      if (sprite.x > canvas.width) {
-        sprite.x = -sprite.width;
+  });
+  
+  let floor_two = Sprite({
+    type: 'ground',
+    name: 'platform-2',
+    x: 0,
+    y: 95,
+    render() {
+      this.context.fillStyle = 'gray';
+      this.context.fillRect(0, 0 , canvas.width, 10);
+    }
+  });
+  
+  let floor_three = Sprite({
+    type: 'ground',
+    name: 'platform-3',
+    x: 0,
+    y: 155,
+    render() {
+      this.context.fillStyle = 'olive';
+      this.context.fillRect(0, 0 , canvas.width, 10);
+    }
+  });
+  
+  let loop = GameLoop({  // create the main game loop
+  
+    update: function() { // update the game state
+  
+      // for (let t = 0; t < platforms.length; t++){
+      //   console.log(platforms[t].y)
+      //   platforms[t].update()
+      // }
+      UpdateAudio();
+      floor_one.update();
+      floor_two.update();
+      floor_three.update();
+      player.update();
+  
+      // wrap the sprites position when it reaches
+      // the edge of the screen
+      if (player.x > canvas.width) {
+        player.x = -player.width;
       }
-      if (sprite.x < 0-sprite.width ){
-        sprite.x = canvas.width
-      }
-      sprite.update()
-      //TODO: study the code stolen from following project: https://github.com/KilledByAPixel/EggTimeRewind
-      //PlaySound(8);
-    });
-  },
-  render: function() { // render the game state
-    // for (let t = 0; t < platforms.length; t++){
-    //   console.log(platforms[t].y)
-    //   platforms[t].render()
-    // }
-    floor_one.render();
-    floor_two.render();
-    floor_three.render();
-    player.render();
-    sprite.render();
-    sprites.map(sprite => sprite.render());
-  }
-});
-
-loop.start();    // start the game
+      sprites.map(sprite => {
+        if (sprite.x > (canvas.width + sprite.width)) {
+          sprite.x = -sprite.width;
+        }
+        if (sprite.x < 0-sprite.width ){
+          sprite.x = canvas.width
+        }
+        sprite.update()
+        //TODO: study the code stolen from following project: https://github.com/KilledByAPixel/EggTimeRewind
+        //PlaySound(8);
+      });
+    },
+    render: function() { // render the game state
+      // for (let t = 0; t < platforms.length; t++){
+      //   console.log(platforms[t].y)
+      //   platforms[t].render()
+      // }
+      floor_one.render();
+      floor_two.render();
+      floor_three.render();
+      player.render();
+      sprites.map(sprite => sprite.render());
+    }
+  });
+  
+  loop.start();    // start the game
+};
