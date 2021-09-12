@@ -131,7 +131,7 @@ function createEnemy(xpos,ypos,direction) {
     color: 'red',  // fill color of the sprite rectangle
     width: 16,     // width and height of the sprite rectangle
     height: 24,
-    dx: (Math.random() * 4 - 2) * direction, 
+    dx: grid * direction, 
   });
   sprites.push(enemy);
 }
@@ -146,6 +146,7 @@ function definePlayer(xpos,ypos) {
 let initialXpos=0
 let initialYpos=20
 let direction=1
+let grid=16
 //this.soundGameOver()
 for (let i = 0; i < 3; i++) {
   if (direction < 1) {
@@ -158,17 +159,17 @@ for (let i = 0; i < 3; i++) {
   direction*=-1
 }
 
-let image = new Image();
-image.src = '../../assets/imgs/hero.png';
-image.onload = function() {
+let image_player = new Image();
+image_player.src = '../../assets/imgs/hero.png';
+image_player.onload = function() {
   let player = Sprite({
     x: 100,
     y: 35,
-    dx: 1,
+    dx: grid,
     anchor: {x: 0, y: 1},
 
     // required for an image sprite
-    image: image
+    image: image_player
   });
 
   let platforms = []
@@ -209,7 +210,7 @@ image.onload = function() {
   });
   
   let loop = GameLoop({  // create the main game loop
-  
+    fps: 1,
     update: function() { // update the game state
   
       // for (let t = 0; t < platforms.length; t++){
